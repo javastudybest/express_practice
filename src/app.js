@@ -4,10 +4,12 @@
 import express from 'express';
 import ejs from 'ejs';
 import path from 'path';
+import morgan from 'morgan';
 
 import mainRouter from '@src/routes/main.routes';
 import user from '@src/routes/user/user';
 import db from '@src/models';
+import { logger } from './config/winston';
 
 db.sequelize
   .sync()
@@ -21,6 +23,7 @@ const port = 8000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(morgan('dev'));
 
 app.use(express.static('template'));
 app.set('view engine', 'ejs');
@@ -34,7 +37,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`
+  logger.info(`
     ###################################################
     Server listening on port: ${8000}
     ###################################################
