@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import Member from '../../models/member';
 import bcrypt from 'bcrypt';
+import Member from '@src/models/member';
 
 const router = Router();
 

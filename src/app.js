@@ -5,9 +5,9 @@ import express from 'express';
 import ejs from 'ejs';
 import path from 'path';
 
-import mainRouter from './routes/main.routes';
-import user from './routes/user/user';
-import db from './models';
+import mainRouter from '@src/routes/main.routes';
+import user from '@src/routes/user/user';
+import db from '@src/models';
 
 db.sequelize
   .sync()
