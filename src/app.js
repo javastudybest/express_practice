@@ -19,6 +19,9 @@ db.sequelize
 const app = express();
 const port = 8000;
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 app.use(express.static('template'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
