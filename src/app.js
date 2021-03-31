@@ -6,7 +6,15 @@ import ejs from 'ejs';
 import path from 'path';
 
 import mainRouter from './routes/main.routes';
-import login from './routes/login/loginPage';
+import user from './routes/user/user';
+import db from './models';
+
+db.sequelize
+  .sync()
+  .then(() => {
+    console.log('db 연결 성공');
+  })
+  .catch(console.error);
 
 const app = express();
 const port = 8000;
@@ -16,7 +24,11 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use('/', mainRouter);
-app.use('/', login);
+app.use('/user', user);
+
+app.get('/', (req, res) => {
+  res.render('index');
+});
 
 app.listen(port, () => {
   console.log(`
