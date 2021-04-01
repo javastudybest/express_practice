@@ -9,6 +9,9 @@ export default {
     database: 'javastudy',
     host: '127.0.0.1',
     dialect: 'mysql',
+    jwt: {
+      secretKey: process.env.SECRET_KEY,
+    },
   },
   test: {
     username: 'root',

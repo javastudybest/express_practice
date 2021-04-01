@@ -36,6 +36,10 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
+app.use((err, req, res, next) => {
+  res.json({ message: err.message });
+});
+
 app.listen(port, () => {
   logger.info(`
     ###################################################
