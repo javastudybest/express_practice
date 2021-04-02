@@ -10,6 +10,12 @@ import mainRouter from '@src/routes/main.routes';
 import user from '@src/routes/user/user';
 import db from '@src/models';
 import { logger } from './config/winston';
+import session from 'express-session';
+import passport from 'passport';
+import passportConfig from '@src/passport';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 db.sequelize
   .sync()
@@ -21,6 +27,16 @@ db.sequelize
 const app = express();
 const port = 8000;
 
+passportConfig();
+app.use(
+  session({
+    saveUninitialized: false,
+    resave: false,
+    secret: process.env.COOKIE_SECRET,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));

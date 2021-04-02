@@ -2,19 +2,21 @@ import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import Member from '@src/models/member';
 import * as jwtUtils from '@src/jwt';
+import passport from 'passport';
+import { isNotLoggedIn, isLoggedIn } from '@src/middleware';
 
 const router = Router();
 
 // user/login
-router.get('/login', (req, res) => {
+router.get('/login', isNotLoggedIn, (req, res) => {
   res.render('./user/loginPage');
 });
 
-router.get('/register', (req, res) => {
+router.get('/register', isNotLoggedIn, (req, res) => {
   res.render('./user/signupPage');
 });
 
-router.post('/register', async (req, res, next) => {
+router.post('/register', isNotLoggedIn, async (req, res, next) => {
   try {
     const { email, password, name } = req.body;
     const exMember = await Member.findOne({
@@ -38,36 +40,29 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
-router.post('/login', async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const findMember = await Member.findOne({
-      where: {
-        email,
-      },
-    });
-    if (!findMember) {
-      return res.render('error/errorPage', {
-        errorMessage: '존재하지 않는 사용자입니다.',
-      });
-      // next(new Error('존재하지 않는 사용자입니다.'));
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, member, info) => {
+    if (err) {
+      console.error(err);
+      return next(err);
     }
-    const comparePassword = await bcrypt.compare(password, findMember.password);
-    if (!comparePassword) {
-      return res.render('error/errorPage', {
-        errorMessage: '비밀번호가 틀렸습니다.',
-      });
+    if (info) {
+      return res.status(401).send(info.reason);
     }
-    // id 받아오는 건 findMember.getDataValue('id)
-    const token = jwtUtils.createToken(findMember.getDataValue('id'));
-    // localStorage.setItem('jwt', JSON.stringify({ token: token }));
-    return res.render('index', {
-      token: token,
+    return req.login(member, async (loginErr) => {
+      if (loginErr) {
+        console.error(loginErr);
+        return next(loginErr);
+      }
+      return res.render('index');
     });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
+  })(req, res, next);
+});
+
+router.post('/logout', isLoggedIn, (req, res, next) => {
+  req.logout();
+  req.session.destroy();
+  res.send('ok');
 });
 
 export default router;
