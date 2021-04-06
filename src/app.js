@@ -45,10 +45,17 @@ app.use(express.static('template'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.isAuthenticated();
+  res.locals.currentUser = req.use;
+  next();
+});
+
 app.use('/', mainRouter);
 app.use('/user', user);
 
 app.get('/', (req, res) => {
+  console.log(res.locals);
   res.render('index');
 });
 
@@ -59,7 +66,7 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   logger.info(`
     ###################################################
-    Server listening on port: ${8000}
+    Server listening on port: ${port}
     ###################################################
   `);
 });

@@ -54,7 +54,7 @@ router.post('/login', (req, res, next) => {
         console.error(loginErr);
         return next(loginErr);
       }
-      return res.render('index');
+      return res.redirect('/');
     });
   })(req, res, next);
 });

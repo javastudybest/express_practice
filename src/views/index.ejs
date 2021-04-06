@@ -1,13 +1,11 @@
-<%- include('partials/header') %>
-<!-- <% if (typeof token != "undefined") { %> <%
-var token = token %>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <h1>javaStudyBest</h1>
 
-<script>
-  let token = <%- JSON.stringify(token) %>;
-  localStorage.setItem('jwt', JSON.stringify({'token': token}));
-</script>
-<% } %> -->
-
-<h1>javaStudyBest</h1>
-
-<%- include('partials/footer') %>
+    <%- include('partials/footer') %>
+  </body>
+</html>
