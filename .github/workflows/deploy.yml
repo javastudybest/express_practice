@@ -60,6 +60,7 @@ jobs:
         with:
           name: deploy.zip
           path: deploy.zip
+
   deploy:
     needs:
       - build
@@ -73,3 +74,5 @@ jobs:
       - name: run server
         run: |
           unzip -o ./deploy.zip
+          cd deploy/
+          sh ./run.sh
