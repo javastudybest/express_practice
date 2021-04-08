@@ -2,4 +2,4 @@ FROM node:12
 WORKDIR /app
 COPY . .
 RUN yarn 
-ENTRYPOINT [ "yarn", "start:prod" ]
+ENTRYPOINT [ "yarn", "start:dev" ]
