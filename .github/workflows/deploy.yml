@@ -35,7 +35,7 @@ jobs:
           file_name: .env
 
       - name: Get Semantic Versioning
-        id: docker-image- version
+        id: docker-image-version
         run: VERSION=`cat ./version.txt`-${{github.run_id}}
           echo "::set-output name=version::$VERSION"
 
