@@ -51,3 +51,25 @@ jobs:
           docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:$IMAGE_TAG
           docker push $DOCKER_REGISTRY/$DOCKER_REPOSITORY:latest
           echo -e "IMAGE=$DOCKER_REGISTRY/$DOCKER_REPOSITORY\nTAG=$IMAGE_TAG"
+
+      - name: Zip deploy.Zip
+        run: zip -r deploy.zip deploy
+
+      - name: Upload deploy.zip
+        uses: actions/upload-artifact@v2
+        with:
+          name: deploy.zip
+          path: deploy.zip
+  deploy:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Downloa deploy.zip
+        uses: actions/download-artifact@v2
+        with:
+          name: deploy.zip
+
+      - name: run server
+        run: |
+          unzip -o ./deploy.zip
