@@ -4,25 +4,17 @@ on:
   push:
     branches:
       - develop
+
 jobs:
-  deploy:
-    name: Build, Deploy to S3 bucket
-    runs-on: [ubuntu-latest]
-
-    strategy:
-      matrix:
-        node-version: [12.16.x]
-
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: checkout@v2
+        uses: actions/checkout@v2
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
         with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Npm install
-        run: npm install
-
-      - name: Build
-        run: npm run build
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{secrets.GIT_TOKEN}}
