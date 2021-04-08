@@ -36,7 +36,8 @@ jobs:
 
       - name: Get Semantic Versioning
         id: docker-image-version
-        run: VERSION=`cat ./version.txt`-${{github.run_id}}
+        run: |
+          VERSION=`cat ./version.txt`-${{github.run_id}}
           echo "::set-output name=version::$VERSION"
 
       - name: Build, Push image to Github Container Registry
